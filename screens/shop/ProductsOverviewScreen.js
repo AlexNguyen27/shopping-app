@@ -1,17 +1,15 @@
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { FlatList, Text } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
+import * as cardActions from '../../store/actions/cart';
 
 // eslint-disable-next-line no-unused-vars
 const ProductsOverviewScreen = (props) => {
   const products = useSelector((state) => state.products.availableProducts);
-
-  const onAddToCard = () => {
-    props.navigation.navigate({ routeName: 'ProductDetail' });
-  };
-
+  const dispatch = useDispatch();
+  
   return (
     <FlatList
       data={products}
@@ -27,7 +25,9 @@ const ProductsOverviewScreen = (props) => {
               productTitle: itemData.item.title,
             });
           }}
-          onAddToCard={onAddToCard}
+          onAddToCard={() => {
+            dispatch(cardActions.addToCart(itemData.item))
+          }}
         />
       )}
     />

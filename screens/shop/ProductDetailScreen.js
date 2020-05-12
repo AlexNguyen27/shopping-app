@@ -7,14 +7,17 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
+import * as cardActions from '../../store/actions/cart';
 
 const ProductDetailScreen = (props) => {
   const productId = props.navigation.getParam('productId');
   const selectedProduct = useSelector((state) =>
     state.products.availableProducts.find((prod) => prod.id === productId)
   );
+
+  const dispatch = useDispatch();
 
   return (
     <ScrollView>
@@ -23,7 +26,13 @@ const ProductDetailScreen = (props) => {
         source={{ uri: selectedProduct.imageUrl }}
       ></Image>
       <View style={styles.actions}>
-        <Button color={Colors.primary} title="Add to card" onPress={() => {}} />
+        <Button
+          color={Colors.primary}
+          title="Add to card"
+          onPress={() => {
+            dispatch(cardActions.addToCart(selectedProduct));
+          }}
+        />
       </View>
       <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
       <Text style={styles.description}>{selectedProduct.description}</Text>
@@ -53,11 +62,11 @@ const styles = StyleSheet.create({
     fontFamily: 'open-sans',
     fontSize: 14,
     textAlign: 'center',
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   actions: {
     marginVertical: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 });
 

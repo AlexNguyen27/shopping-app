@@ -39,7 +39,7 @@ const ProductItem = (props) => {
               />
               <Button
                 color={Colors.primary}
-                title="To Card"
+                title="To Cart"
                 onPress={props.onAddToCard}
               />
             </View>
