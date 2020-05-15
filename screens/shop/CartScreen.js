@@ -3,11 +3,11 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Colors from '../../constants/Colors';
+import Card from '../../components/UI/Card';
 import CartItem from '../../components/shop/CartItem';
 import * as cartActions from '../../store/actions/cart';
 import * as ordersActions from '../../store/actions/orders';
-import Card from '../../components/UI/Card';
+import Colors from '../../constants/Colors';
 
 const CartScreen = (props) => {
   const dispatch = useDispatch();
@@ -18,12 +18,13 @@ const CartScreen = (props) => {
     const transformCartItems = [];
 
     for (const key in state.cart.items) {
+      const { productTitle, productPrice, quantity, sum } = state.cart.items[key];
       transformCartItems.push({
         productId: key,
-        productTitle: state.cart.items[key].productTitle,
-        productPrice: state.cart.items[key].productPrice,
-        quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum,
+        productTitle,
+        productPrice,
+        quantity,
+        sum,
       });
     }
 
