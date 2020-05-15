@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Button } from 'react-native';
+import { FlatList, StyleSheet, Button, Alert } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,6 +12,24 @@ const UserProductsScreen = (props) => {
   const userProducts = useSelector((state) => state.products.userProducts);
 
   const dispatch = useDispatch();
+
+  const editProductHandler = (id) => {
+    props.navigation.navigate('EditProduct', { productId: id });
+  };
+
+  const deleteHandler = (id) => {
+    Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
+      { text: 'No', style: 'default' },
+      {
+        text: 'Yes',
+        style: 'destructive',
+        onPress: () => {
+          dispatch(productsActions.deleteProduct(id));
+        },
+      },
+    ]);
+  };
+
   return (
     <FlatList
       data={userProducts}
@@ -21,13 +39,21 @@ const UserProductsScreen = (props) => {
           imageUrl={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
-          onSelect={() => {}}
+          onSelect={() => {
+            editProductHandler(itemData.item.id);
+          }}
         >
-          <Button color={Colors.primary} title="Edit" onPress={() => {}} />
+          <Button
+            color={Colors.primary}
+            title="Edit"
+            onPress={() => {
+              editProductHandler(itemData.item.id);
+            }}
+          />
           <Button
             color={Colors.primary}
             title="Delete"
-            onPress={() => dispatch(productsActions.deleteProduct(itemData.item.id))}
+            onPress={deleteHandler.bind(this, itemData.item.id)}
           />
         </ProductItem>
       )}
@@ -40,13 +66,24 @@ const styles = StyleSheet.create({});
 UserProductsScreen.navigationOptions = (navData) => {
   return {
     headerTitle: 'Your Products',
-    headerLeft: (
+    headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Menu"
           iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
           onPress={() => {
             navData.navigation.toggleDrawer('Orders');
+          }}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Add"
+          iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+          onPress={() => {
+            navData.navigation.navigate('EditProduct');
           }}
         />
       </HeaderButtons>
