@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, ColorPropType } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Colors from '../../constants/Colors';
 import CartItem from '../../components/shop/CartItem';
+import * as cartActions from '../../store/actions/cart';
+import * as ordersActions from '../../store/actions/orders';
 
 const CartScreen = (props) => {
+  const dispatch = useDispatch();
+
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
 
   const cartItems = useSelector((state) => {
@@ -22,6 +26,9 @@ const CartScreen = (props) => {
       });
     }
 
+    // return transformCartItems.sort((a, b) =>
+    //   a.productPrice > b.productPrice ? 1 : -1
+    // );
     return transformCartItems;
   });
 
@@ -29,13 +36,16 @@ const CartScreen = (props) => {
     <View style={styles.screen}>
       <View style={styles.sumary}>
         <Text style={styles.sumaryText}>
-          Total:{' '}
+          Total:
           <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
         </Text>
         <Button
           color={Colors.accent}
           title="Order Now"
           disabled={cartItems.length === 0}
+          onPress={() => {
+            dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
+          }}
         />
       </View>
       <View>
@@ -47,13 +57,20 @@ const CartScreen = (props) => {
               quantity={itemData.item.quantity}
               title={itemData.item.productTitle}
               amount={itemData.item.sum}
-              onRemove={() => {}}
+              onRemove={() => {
+                dispatch(cartActions.removeFromCart(itemData.item.productId));
+              }}
             />
           )}
         />
       </View>
     </View>
   );
+};
+
+
+CartScreen.navigationOptions = {
+  headerTitle: 'Your Cart',
 };
 
 const styles = StyleSheet.create({
