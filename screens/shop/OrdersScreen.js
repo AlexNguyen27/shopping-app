@@ -17,11 +17,21 @@ const OrdersScreen = (props) => {
   );
 };
 
-OrdersScreen.navigationOptions = navData => {
-    return {
-        headerTitle: 'Your Orders',
-
-    }
+OrdersScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: 'Your Orders',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {
+            navData.navigation.toggleDrawer('Orders');
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 const styles = StyleSheet.create({});

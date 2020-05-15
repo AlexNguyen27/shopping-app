@@ -4,9 +4,9 @@ import { FlatList, Text, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
+import { HeaderButton } from '../../components/UI/HeaderButton';
 import * as cardActions from '../../store/actions/cart';
 import ProductItem from '../../components/shop/ProductItem';
-import { HeaderButton } from '../../components/UI/HeaderButton';
 
 // eslint-disable-next-line no-unused-vars
 const ProductsOverviewScreen = (props) => {
