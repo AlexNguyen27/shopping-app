@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { composeWithDevTools } from 'redux-devtools-extension';
+// import { composeWithDevTools } from 'redux-devtools-extension';
+import ReduxThunk from 'redux-thunk';
 
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
 });
 
 // should remove compose when devploy app to production
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => Font.loadAsync({
   'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),

@@ -1,5 +1,11 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,8 +15,11 @@ import * as cartActions from '../../store/actions/cart';
 import * as ordersActions from '../../store/actions/orders';
 import Colors from '../../constants/Colors';
 
+// eslint-disable-next-line no-unused-vars
 const CartScreen = (props) => {
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
 
@@ -18,7 +27,9 @@ const CartScreen = (props) => {
     const transformCartItems = [];
 
     for (const key in state.cart.items) {
-      const { productTitle, productPrice, quantity, sum } = state.cart.items[key];
+      const { productTitle, productPrice, quantity, sum } = state.cart.items[
+        key
+      ];
       transformCartItems.push({
         productId: key,
         productTitle,
@@ -34,21 +45,31 @@ const CartScreen = (props) => {
     return transformCartItems;
   });
 
+  const sendOrdersHandler = async () => {
+    setIsLoading(true);
+    await dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
+    setIsLoading(false);
+  };
+
   return (
     <View style={styles.screen}>
       <Card style={styles.sumary}>
         <Text style={styles.sumaryText}>
           Total:
-          <Text style={styles.amount}>${Math.round(cartTotalAmount.toFixed(2) * 100) / 100}</Text>
+          <Text style={styles.amount}>
+            ${Math.round(cartTotalAmount.toFixed(2) * 100) / 100}
+          </Text>
         </Text>
-        <Button
-          color={Colors.accent}
-          title="Order Now"
-          disabled={cartItems.length === 0}
-          onPress={() => {
-            dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
-          }}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="small" color={Colors.primary} />
+        ) : (
+          <Button
+            color={Colors.accent}
+            title="Order Now"
+            disabled={cartItems.length === 0}
+            onPress={sendOrdersHandler}
+          />
+        )}
       </Card>
       <View>
         <FlatList
@@ -70,7 +91,6 @@ const CartScreen = (props) => {
     </View>
   );
 };
-
 
 CartScreen.navigationOptions = {
   headerTitle: 'Your Cart',

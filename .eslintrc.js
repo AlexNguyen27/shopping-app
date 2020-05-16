@@ -23,7 +23,11 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'guard-for-in': 'off',
     'object-curly-newline': 'off',
-    'implicit-arrow-linebreak': 'off'
+    'implicit-arrow-linebreak': 'off',
+    'default-case': 'off',
+    'no-case-declarations': 'off',
+    'arrow-body-style': 'off',
+    'no-useless-catch': 'off'
   },
   globals: {
     fetch: false,
