@@ -8,20 +8,22 @@ import Card from '../UI/Card';
 const OrderItem = (props) => {
   const [showDetail, setShowDetail] = useState(false);
 
+  const { amount, date, items } = props;
+
   return (
     <Card style={styles.orderItem}>
       <View style={styles.sumary}>
-        <Text style={styles.totalAmount}>${props.amount.toFixed(2)}</Text>
-        <Text style={styles.date}>{props.date}</Text>
+        <Text style={styles.totalAmount}>${amount.toFixed(2)}</Text>
+        <Text style={styles.date}>{date}</Text>
       </View>
       <Button
         color={Colors.primary}
-        title={showDetail ? "Hide Details" : "Show Details"}
+        title={showDetail ? 'Hide Details' : 'Show Details'}
         onPress={() => setShowDetail((prevState) => !prevState)}
       />
       {showDetail && (
         <View style={styles.detailItems}>
-          {props.items.map((cartItem) => (
+          {items.map((cartItem) => (
             <CartItem
               key={cartItem.productId}
               quantity={cartItem.quantity}

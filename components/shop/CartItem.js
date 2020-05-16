@@ -9,15 +9,17 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 const CartItem = (props) => {
+  const { quantity, title, amount, deletable } = props;
+
   return (
     <View style={styles.cartItem}>
       <Text style={styles.itemData}>
-        <Text style={styles.quantity}>{props.quantity} </Text>
-        <Text style={styles.mainText}>{props.title}</Text>
+        <Text style={styles.quantity}>{quantity} </Text>
+        <Text style={styles.mainText}>{title}</Text>
       </Text>
       <View style={styles.itemData}>
-        <Text style={styles.mainText}>${props.amount.toFixed(2)}</Text>
-        {props.deletable && (
+        <Text style={styles.mainText}>${amount.toFixed(2)}</Text>
+        {deletable && (
           <TouchableOpacity onPress={props.onRemove} style={styles.deleteBtn}>
             <Ionicons
               name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
