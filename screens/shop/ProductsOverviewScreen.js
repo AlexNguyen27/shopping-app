@@ -27,13 +27,6 @@ const ProductsOverviewScreen = (props) => {
   const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
 
-  const selectItemHandler = (id, title) => {
-    props.navigation.navigate('ProductDetail', {
-      productId: id,
-      productTitle: title,
-    });
-  };
-
   const loadProducts = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
@@ -43,7 +36,7 @@ const ProductsOverviewScreen = (props) => {
       setError(err.message);
     }
     setIsRefreshing(false);
-  }, [dispatch, setIsLoading, setError]);
+  }, [dispatch, setError, setIsLoading]);
 
   useEffect(() => {
     const willFocusSub = props.navigation.addListener(
@@ -57,18 +50,17 @@ const ProductsOverviewScreen = (props) => {
 
   useEffect(() => {
     setIsLoading(true);
-    loadProducts();
-    setIsLoading(false);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
-
+  const selectItemHandler = (id, title) => {
+    props.navigation.navigate('ProductDetail', {
+      productId: id,
+      productTitle: title,
+    });
+  };
   if (error) {
     return (
       <View style={styles.centered}>
@@ -81,7 +73,19 @@ const ProductsOverviewScreen = (props) => {
       </View>
     );
   }
+
+  if (isLoading) {
+    console.log('loading');
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   if (!isLoading && products.length === 0) {
+    console.log(isLoading);
+    console.log('run');
     return (
       <View style={styles.centered}>
         <Text>No products found. Maybe start adding some!</Text>
@@ -101,13 +105,15 @@ const ProductsOverviewScreen = (props) => {
           title={itemData.item.title}
           price={itemData.item.price}
           onSelect={() =>
-            selectItemHandler(itemData.item.id, itemData.item.title)}
+            selectItemHandler(itemData.item.id, itemData.item.title)
+          }
         >
           <Button
             color={Colors.primary}
             title="View Details"
             onPress={() =>
-              selectItemHandler(itemData.item.id, itemData.item.title)}
+              selectItemHandler(itemData.item.id, itemData.item.title)
+            }
           />
           <Button
             color={Colors.primary}

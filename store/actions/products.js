@@ -7,8 +7,10 @@ export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 export const baseURL = 'https://shopping-app-e51f6.firebaseio.com';
 
-export const fetchProducts = () => async (dispatch) => {
+export const fetchProducts = () => async (dispatch, getState) => {
   try {
+    const { userId } = getState().auth;
+
     const res = await fetch(`${baseURL}/products.json`);
 
     if (!res.ok) {
@@ -23,7 +25,7 @@ export const fetchProducts = () => async (dispatch) => {
       return loadedProducts.push(
         new Product(
           key,
-          'u1',
+          resData[key].ownerId,
           resData[key].title,
           resData[key].imageUrl,
           resData[key].description,
@@ -31,16 +33,24 @@ export const fetchProducts = () => async (dispatch) => {
         )
       );
     });
-    dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+    dispatch({
+      type: SET_PRODUCTS,
+      products: loadedProducts,
+      userProducts: loadedProducts.filter((prod) => prod.ownerId === userId),
+    });
   } catch (err) {
     throw err;
   }
 };
 
-export const deleteProduct = (productId) => async (dispatch) => {
-  const res = await fetch(`${baseURL}/products/${productId}.json`, {
-    method: 'DELETE',
-  });
+export const deleteProduct = (productId) => async (dispatch, getState) => {
+  const { token } = getState().auth;
+  const res = await fetch(
+    `${baseURL}/products/${productId}.json?auth=${token}`,
+    {
+      method: 'DELETE',
+    }
+  );
 
   if (!res.ok) {
     throw new Error('Something when wrong!');
@@ -53,9 +63,11 @@ export const deleteProduct = (productId) => async (dispatch) => {
 };
 
 export const createProduct = (title, description, imageUrl, price) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
-  const res = await fetch(`${baseURL}/products.json`, {
+  const { token, userId } = getState().auth;
+  const res = await fetch(`${baseURL}/products.json?auth=${token}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -65,6 +77,7 @@ export const createProduct = (title, description, imageUrl, price) => async (
       description,
       imageUrl,
       price,
+      ownerId: userId,
     }),
   });
 
@@ -82,14 +95,18 @@ export const createProduct = (title, description, imageUrl, price) => async (
       description,
       imageUrl,
       price,
+      ownerId: userId,
     },
   });
 };
 
 export const updateProduct = (id, title, description, imageUrl) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
-  const res = await fetch(`${baseURL}/products/${id}.json`, {
+  const { token } = getState().auth;
+
+  const res = await fetch(`${baseURL}/products/${id}.json?auth=${token}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
