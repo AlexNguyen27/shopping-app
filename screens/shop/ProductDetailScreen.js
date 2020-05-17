@@ -14,10 +14,9 @@ import * as cardActions from '../../store/actions/cart';
 
 const ProductDetailScreen = (props) => {
   const productId = props.navigation.getParam('productId');
-  
+
   const selectedProduct = useSelector((state) =>
-    state.products.availableProducts.find((prod) => prod.id === productId)
-  );
+    state.products.availableProducts.find((prod) => prod.id === productId));
 
   const dispatch = useDispatch();
 
@@ -26,7 +25,7 @@ const ProductDetailScreen = (props) => {
       <Image
         style={styles.image}
         source={{ uri: selectedProduct.imageUrl }}
-      ></Image>
+      />
       <View style={styles.actions}>
         <Button
           color={Colors.primary}

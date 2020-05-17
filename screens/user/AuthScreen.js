@@ -70,6 +70,7 @@ const AuthScreen = (props) => {
       Alert.alert('An error occurred!', error, [{ text: 'Okay' }]);
     }
   }, [error]);
+
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({

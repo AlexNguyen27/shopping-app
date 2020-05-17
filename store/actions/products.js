@@ -10,7 +10,6 @@ export const baseURL = 'https://shopping-app-e51f6.firebaseio.com';
 export const fetchProducts = () => async (dispatch, getState) => {
   try {
     const { userId } = getState().auth;
-
     const res = await fetch(`${baseURL}/products.json`);
 
     if (!res.ok) {
@@ -18,7 +17,6 @@ export const fetchProducts = () => async (dispatch, getState) => {
     }
 
     const resData = await res.json();
-
     const loadedProducts = [];
 
     Object.keys(resData).map((key) => {
@@ -33,6 +31,7 @@ export const fetchProducts = () => async (dispatch, getState) => {
         )
       );
     });
+
     dispatch({
       type: SET_PRODUCTS,
       products: loadedProducts,

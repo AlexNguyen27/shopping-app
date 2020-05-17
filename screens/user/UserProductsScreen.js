@@ -45,6 +45,7 @@ const UserProductsScreen = (props) => {
       </View>
     );
   }
+
   return (
     <FlatList
       data={userProducts}

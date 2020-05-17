@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
-// should remove compose when devploy app to production
+// Should remove compose when devploy app to production
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () =>

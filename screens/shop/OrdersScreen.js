@@ -5,7 +5,8 @@ import {
   View,
   ActivityIndicator,
   Platform,
-  Text
+  Text,
+  Alert,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -26,7 +27,7 @@ const OrdersScreen = (props) => {
     try {
       await dispatch(ordersActions.fetchOrders());
     } catch (err) {
-      console.log(err);
+      Alert.alert('An error occurred!', err, [{ text: 'Okay' }]);
     }
     setIsLoading(false);
   }, [dispatch, setIsLoading]);
