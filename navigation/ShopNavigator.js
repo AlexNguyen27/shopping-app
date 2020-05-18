@@ -27,10 +27,12 @@ const defaultNavOption = {
   },
   headerTitleStyle: {
     fontFamily: 'open-sans-bold',
+    paddingVertical: 15
   },
   headerBackTitleStyle: {
     fontFamily: 'open-sans',
   },
+  headerTitleAlign: 'center',
   headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary,
 };
 

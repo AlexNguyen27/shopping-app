@@ -8,6 +8,7 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
+  Text,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
@@ -109,6 +110,14 @@ const AuthScreen = (props) => {
       style={styles.screen}
     >
       <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.welcome}>
+            {isSignup ? 'Create your account :)' : 'Welcome back :)'}
+          </Text>
+          <Text style={styles.continue}>
+            {isSignup ? 'Signup to continue' : 'Login to continue'}
+          </Text>
+        </View>
         <Card style={styles.authContainer}>
           <ScrollView>
             <Input
@@ -169,8 +178,8 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   authContainer: {
     width: '70%',
@@ -180,6 +189,18 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 10,
+  },
+  welcomeContainer: {
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  welcome: {
+    fontFamily: 'open-sans-bold',
+    fontSize: 20,
+  },
+  continue: {
+    fontFamily: 'open-sans',
+    fontSize: 15,
   },
 });
 
