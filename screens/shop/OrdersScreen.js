@@ -27,7 +27,7 @@ const OrdersScreen = (props) => {
     try {
       await dispatch(ordersActions.fetchOrders());
     } catch (err) {
-      Alert.alert('An error occurred!', err, [{ text: 'Okay' }]);
+      console.log(err);
     }
     setIsLoading(false);
   }, [dispatch, setIsLoading]);
