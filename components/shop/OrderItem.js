@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import CartItem from './CartItem';
 import Colors from '../../constants/Colors';
@@ -13,12 +14,17 @@ const OrderItem = (props) => {
   return (
     <Card style={styles.orderItem}>
       <View style={styles.sumary}>
-        <Text style={styles.totalAmount}>${amount.toFixed(2)}</Text>
+        <Text style={styles.totalAmount}>
+          Total Amount: <Text style={styles.price}>${amount.toFixed(2)}</Text>
+        </Text>
+      </View>
+      <View>
         <Text style={styles.date}>{date}</Text>
       </View>
-      <Button
+      <MaterialIcons
+        name={showDetail ? 'expand-less' : 'expand-more'}
         color={Colors.primary}
-        title={showDetail ? 'Hide Details' : 'Show Details'}
+        size={25}
         onPress={() => setShowDetail((prevState) => !prevState)}
       />
       {showDetail && (
@@ -44,6 +50,9 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
   },
+  price: {
+    color: Colors.view
+  },
   sumary: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -57,12 +66,12 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 16,
-    fontFamily: 'open-sans',
-    color: '#888',
+    fontFamily: 'open-sans-bold',
+    color: 'gray',
   },
   detailItems: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 });
 
 export default OrderItem;

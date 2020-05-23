@@ -10,7 +10,7 @@ class Order {
 
   get readableDate() {
     // return this.date.toLocaleDateString('en-US');
-    return moment(this.date).format('DD/MM/YYYY  HH:MM:SS');
+    return moment(this.date).format('LLLL');
   }
 }
 

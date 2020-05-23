@@ -7,7 +7,7 @@ import {
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { useDispatch } from 'react-redux';
 import { Platform, SafeAreaView, Button, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
@@ -82,11 +82,12 @@ const AdminNavigator = createStackNavigator(
   {
     navigationOptions: {
       drawerIcon: (drawerConfig) => (
-        <Ionicons
-          name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-          size={23}
-          color={drawerConfig.tintColor}
-        />
+        <FontAwesome5 name="user-edit" size={21} color={drawerConfig.tintColor} />
+        // <Ionicons
+        //   name={Platform.OS === 'android' ? 'user-alt' : 'ios-create'}
+        //   size={23}
+        //   color={drawerConfig.tintColor}
+        // />
       ),
     },
     defaultNavigationOptions: defaultNavOption,

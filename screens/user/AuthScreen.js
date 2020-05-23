@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
+import { FontAwesome } from '@expo/vector-icons';
+
 
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
@@ -87,6 +89,8 @@ const AuthScreen = (props) => {
   const authHandler = async () => {
     let action;
     const { email, password } = formState.inputValues;
+    // const email = 'test@gmail.com';
+    // const password = '123456';
     if (isSignup) {
       action = authActions.signup(email, password);
     } else {
@@ -161,6 +165,11 @@ const AuthScreen = (props) => {
                 onPress={() => setIsSignup((prevState) => !prevState)}
               />
             </View>
+            <View style={styles.btnContainer}>
+              <FontAwesome.Button name="facebook" backgroundColor="#3b5998" onPress={() => {}}>
+                Sign in with Facebook
+              </FontAwesome.Button>
+            </View>
           </ScrollView>
         </Card>
       </LinearGradient>
@@ -188,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   btnContainer: {
-    marginTop: 10,
+    marginTop: 20,
   },
   welcomeContainer: {
     marginVertical: 10,

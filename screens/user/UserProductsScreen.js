@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FlatList,
-  Button,
   Alert,
   Platform,
   View,
@@ -10,11 +9,16 @@ import {
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 
 import ProductItem from '../../components/shop/ProductItem';
 import HeaderButton from '../../components/UI/HeaderButton';
 import Colors from '../../constants/Colors';
 import * as productsActions from '../../store/actions/products';
+import Star from '../../components/UI/Star';
 
 const UserProductsScreen = (props) => {
   const userProducts = useSelector((state) => state.products.userProducts);
@@ -59,16 +63,20 @@ const UserProductsScreen = (props) => {
             editProductHandler(itemData.item.id);
           }}
         >
-          <Button
-            color={Colors.primary}
-            title="Edit"
+          <MaterialIcons
+            name="edit"
+            size={35}
+            color={Colors.orange}
+            backgroundColor={Colors.primary}
             onPress={() => {
               editProductHandler(itemData.item.id);
             }}
           />
-          <Button
-            color={Colors.primary}
-            title="Delete"
+          <Star />
+          <MaterialCommunityIcons
+            name="delete"
+            size={30}
+            color={Colors.red}
             onPress={() => deleteHandler(itemData.item.id)}
           />
         </ProductItem>
@@ -82,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
+  }
 });
 
 UserProductsScreen.navigationOptions = (navData) => {
@@ -103,7 +111,7 @@ UserProductsScreen.navigationOptions = (navData) => {
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Add"
-          iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+          iconName={Platform.OS === 'android' ? 'md-add-circle' : 'ios-add-circle'}
           onPress={() => {
             navData.navigation.navigate('EditProduct');
           }}

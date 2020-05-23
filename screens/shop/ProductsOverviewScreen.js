@@ -11,21 +11,24 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import ProductItem from '../../components/shop/ProductItem';
+
 import * as cardActions from '../../store/actions/cart';
 import * as productsAction from '../../store/actions/products';
 
 import Colors from '../../constants/Colors';
+import Star from '../../components/UI/Star';
 
-// eslint-disable-next-line no-unused-vars
 const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
+  const cartObj = useSelector((state) => state.cart.items);
 
   const loadProducts = useCallback(async () => {
     setError(null);
@@ -47,6 +50,16 @@ const ProductsOverviewScreen = (props) => {
       willFocusSub.remove();
     };
   }, [loadProducts]);
+
+  useEffect(() => {
+    // error right here
+    const totalQuantity = Object.keys(cartObj).reduce(
+      (sum, key) => sum + parseFloat(cartObj[key].quantity || 0),
+      0
+    );
+
+    props.navigation.setParams({ totalQuantity });
+  }, [cartObj]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -102,15 +115,21 @@ const ProductsOverviewScreen = (props) => {
           title={itemData.item.title}
           price={itemData.item.price}
           onSelect={() =>
-            selectItemHandler(itemData.item.id, itemData.item.title)}
+            selectItemHandler(itemData.item.id, itemData.item.title)
+          }
         >
-          <Button
-            color={Colors.primary}
-            title="View Details"
+          <MaterialCommunityIcons
+            name="eye"
+            size={30}
+            color={Colors.view}
             onPress={() =>
-              selectItemHandler(itemData.item.id, itemData.item.title)}
+              selectItemHandler(itemData.item.id, itemData.item.title)
+            }
           />
-          <Button
+          <Star />
+          <MaterialCommunityIcons
+            name="cart"
+            size={25}
             color={Colors.primary}
             title="To Cart"
             onPress={() => dispatch(cardActions.addToCart(itemData.item))}
@@ -134,17 +153,30 @@ ProductsOverviewScreen.navigationOptions = (navData) => ({
       />
     </HeaderButtons>
   ),
-  headerRight: () => (
-    <HeaderButtons HeaderButtonComponent={HeaderButton}>
-      <Item
-        title="Cart"
-        iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-        onPress={() => {
-          navData.navigation.navigate('Cart');
-        }}
-      />
-    </HeaderButtons>
-  ),
+  headerRight: () => {
+    let total = 0;
+    if (navData.navigation.state.params) {
+      const { totalQuantity } = navData.navigation.state.params;
+      total = totalQuantity;
+    }
+
+    return (
+      <View style={{ paddingTop: 15 }}>
+        <View style={styles.total}>
+          <Text style={styles.amount}>{total || 0}</Text>
+        </View>
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Cart"
+            iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+            onPress={() => {
+              navData.navigation.navigate('Cart');
+            }}
+          />
+        </HeaderButtons>
+      </View>
+    );
+  },
 });
 
 const styles = StyleSheet.create({
@@ -152,6 +184,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  total: {
+    position: 'absolute',
+    borderRadius: 15,
+    height: 25,
+    width: 25,
+    backgroundColor: Colors.accent,
+    right: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2000,
+  },
+  amount: {
+    color: 'black',
+    fontFamily: 'open-sans-bold'
   },
 });
 

@@ -27,7 +27,9 @@ module.exports = {
     'default-case': 'off',
     'no-case-declarations': 'off',
     'arrow-body-style': 'off',
-    'no-useless-catch': 'off'
+    'no-useless-catch': 'off',
+    'react/prefer-stateless-function': 'off',
+    'react/no-deprecated': 'off'
   },
   globals: {
     fetch: false,
