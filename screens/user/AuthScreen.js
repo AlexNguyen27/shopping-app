@@ -178,7 +178,7 @@ const AuthScreen = (props) => {
 };
 
 AuthScreen.navigationOptions = {
-  headerTitle: 'Shopping App',
+  headerTitle: '☘ MeShop ☘',
 };
 
 const styles = StyleSheet.create({
