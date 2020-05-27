@@ -14,14 +14,27 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case GET_USER_INFO:
       return {
-        user: action.userInfo,
+        user: action.user,
       };
     case ADD_USER_INFO:
       const { userId, email } = action.user;
-      const newUser = new User(userId, null, null, null, email, null, null, null);
+      const newUser = new User(userId, '', '', '', email, '', '', '');
       return {
         ...state,
         user: newUser
+      };
+    case UPDATE_USER_INFO:
+      const { firstName, lastName, phone, address, profileUrl, description } = action.user;
+      return {
+        user: {
+          ...state.user,
+          firstName,
+          lastName,
+          phone,
+          address,
+          profileUrl,
+          description
+        }
       };
   }
   return state;

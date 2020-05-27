@@ -8,17 +8,20 @@ export const baseURL = 'https://shopping-app-e51f6.firebaseio.com';
 
 export const fetchUser = () => async (dispatch, getState) => {
   try {
-    const { userId } = getState().auth;
-    const res = await fetch(`${baseURL}/user/${userId}.json`);
+    const { userId, token } = getState().auth;
+    const res = await fetch(`${baseURL}/users/${userId}.json?auth=${token}`);
 
     if (!res.ok) {
-      throw new Error('Something when wrong!');
+      throw new Error('Can not get user info!');
     }
 
     const user = await res.json();
     dispatch({
       type: GET_USER_INFO,
-      user,
+      user: {
+        id: userId,
+        ...user
+      },
     });
   } catch (err) {
     throw err;
@@ -27,20 +30,21 @@ export const fetchUser = () => async (dispatch, getState) => {
 
 export const createUser = (userData) => async (dispatch, getState) => {
   const { token } = getState().auth;
+  const { userId, email } = userData;
 
-  const res = await fetch(`${baseURL}/users.json?auth=${token}`, {
-    method: 'POST',
+  const res = await fetch(`${baseURL}/users/${userId}.json?auth=${token}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      ...userData,
-      firstName: null,
-      lastName: null,
-      phone: null,
-      address: null,
-      profileUrl: null,
-      description: null,
+      email,
+      firstName: '',
+      lastName: '',
+      phone: '',
+      address: '',
+      profileUrl: '',
+      description: '',
     }),
   });
 
@@ -50,23 +54,22 @@ export const createUser = (userData) => async (dispatch, getState) => {
 
   const user = await res.json();
 
-  console.log('user----', user);
   dispatch({
     type: ADD_USER_INFO,
     user: userData,
   });
 };
 
-export const updateUser = (id, userData) => async (dispatch, getState) => {
-  const { token } = getState().auth;
+export const updateUser = (userData) => async (dispatch, getState) => {
+  const { token, userId } = getState().auth;
 
-  const res = await fetch(`${baseURL}/users/${id}.json?auth=${token}`, {
+  const res = await fetch(`${baseURL}/users/${userId}.json?auth=${token}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      userData,
+      ...userData,
     }),
   });
 
@@ -75,6 +78,8 @@ export const updateUser = (id, userData) => async (dispatch, getState) => {
   }
   dispatch({
     type: UPDATE_USER_INFO,
-    userData,
+    user: {
+      ...userData
+    },
   });
 };

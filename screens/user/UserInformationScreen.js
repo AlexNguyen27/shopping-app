@@ -2,15 +2,20 @@ import React from 'react';
 import { StyleSheet, Platform, Text, View, SafeAreaView, Image, ScrollView } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { useSelector } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
 
 const UserInformationScreen = () => {
+  const userInfo = useSelector((state) => state.user.user);
+
+  const { firstName, lastName, email, phone, address, profileUrl, description } = userInfo;
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ alignSelf: 'center', paddingTop: 16 }}>
           <View style={styles.profileImage}>
-            <Image source={require('../../assets/alex.jpeg')} style={styles.image} resizeMode="center" />
+            <Image source={profileUrl.trim() !== '' ? {uri: profileUrl} : require('../../assets/alex.jpeg')} style={styles.image} resizeMode="center" />
           </View>
           <View style={styles.dm}>
             <MaterialIcons name="chat" size={18} color="#DFD8C8" />
@@ -22,8 +27,9 @@ const UserInformationScreen = () => {
         </View>
 
         <View style={styles.infoContainer}>
-          <Text style={[styles.text, { fontWeight: '200', fontSize: 36 }]}>Julie</Text>
-          <Text style={[styles.text, { color: '#AEB5BC', fontSize: 14 }]}>Photographer</Text>
+          <Text style={[styles.text, { fontWeight: '200', fontSize: 36 }]}>{firstName}{' '}{lastName}</Text>
+          <Text style={[styles.text, { color: '#AEB5BC', fontSize: 14 }]}>Phone: {phone}</Text>
+          <Text style={[styles.text, { color: '#AEB5BC', fontSize: 14 }]}>{email}</Text>
         </View>
 
         <View style={styles.statsContainer}>
@@ -53,10 +59,6 @@ const UserInformationScreen = () => {
               <Image source={require('../../assets/media3.jpg')} style={styles.image} resizeMode="cover" />
             </View>
           </ScrollView>
-          {/* <View style={styles.mediaCount}>
-            <Text style={[styles.text, { fontSize: 24, color: '#DFD8C8', fontWeight: '300' }]}>70</Text>
-            <Text style={[styles.text, { fontSize: 12, color: '#DFD8C8', textTransform: 'uppercase' }]}>Media</Text>
-          </View> */}
         </View>
         <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
         <View style={{ alignItems: 'center' }}>
@@ -64,7 +66,7 @@ const UserInformationScreen = () => {
             <View style={styles.activityIndicator} />
             <View style={{ width: 250 }}>
               <Text style={[styles.text, { color: '#41444B', fontWeight: '300' }]}>
-                Started following <Text style={{ fontWeight: '400' }}>Jake Challeahe</Text> and <Text style={{ fontWeight: '400' }}>Luis Poteer</Text>
+                Address: {address}
               </Text>
             </View>
           </View>
@@ -73,7 +75,7 @@ const UserInformationScreen = () => {
             <View style={styles.activityIndicator} />
             <View style={{ width: 250 }}>
               <Text style={[styles.text, { color: '#41444B', fontWeight: '300' }]}>
-                Started following <Text style={{ fontWeight: '400' }}>Luke Harper</Text>
+                Description: {description}
               </Text>
             </View>
           </View>

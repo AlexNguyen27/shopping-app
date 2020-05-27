@@ -13,7 +13,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Input from '../../components/UI/Input';
 import HeaderButton from '../../components/UI/HeaderButton';
-import * as productsActions from '../../store/actions/products';
 import * as userActions from '../../store/actions/user';
 import Colors from '../../constants/Colors';
 
@@ -51,29 +50,28 @@ const EditUserInfoScreen = (props) => {
   const [error, setError] = useState();
 
   const userId = props.navigation.getParam('userId');
-  // const userInfo = useSelector((state) => state.userInfo.userInfo);
-  const userInfo = {};
+  const userInfo = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
-      firstName: '',
-      lastName: '',
-      phone: '',
-      address: '',
-      profileUrl: '',
-      description: ''
+      firstName: userInfo ? userInfo.firstName : '',
+      lastName: userInfo ? userInfo.lastName : '',
+      phone: userInfo ? userInfo.phone : '',
+      address: userInfo ? userInfo.address : '',
+      profileUrl: userInfo ? userInfo.profileUrl : '',
+      description: userInfo ? userInfo.description : ''
     },
     inputValidities: {
-      firstName: false,
-      lastName: false,
-      phone: false,
-      address: false,
-      profileUrl: false,
-      description: false
+      firstName: !!userInfo,
+      lastName: !!userInfo,
+      phone: !!userInfo,
+      address: !!userInfo,
+      profileUrl: !!userInfo,
+      description: !!userInfo
     },
-    formIsValid: false,
+    formIsValid: !!userInfo,
   });
 
   useEffect(() => {
@@ -92,24 +90,11 @@ const EditUserInfoScreen = (props) => {
 
     setError(null);
     setIsLoading(true);
-    const {
-      firstName,
-      lastName,
-      phone,
-      address,
-      profileUrl,
-      description } = formState.inputValues;
     try {
       // console.log(formState.inputValues);
-      // if (editedProduct) {
       await dispatch(
-        userActions.updateUser(userId)
+        userActions.updateUser(formState.inputValues)
       );
-      // } else {
-      //   await dispatch(
-      //     productsActions.createProduct(title, description, imageUrl, +price)
-      //   );
-      // }
       props.navigation.goBack();
     } catch (err) {
       setError(err);
