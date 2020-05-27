@@ -17,21 +17,23 @@ export const fetchOrders = () => async (dispatch, getState) => {
 
     const loadedOrders = [];
 
-    Object.keys(resData).map((key) => {
-      return loadedOrders.push(
-        new Order(
-          key,
-          resData[key].cartItems,
-          resData[key].totalAmount,
-          new Date(resData[key].date)
-        )
-      );
-    });
+    if (resData) {
+      Object.keys(resData).map((key) => {
+        return loadedOrders.push(
+          new Order(
+            key,
+            resData[key].cartItems,
+            resData[key].totalAmount,
+            new Date(resData[key].date)
+          )
+        );
+      });
 
-    dispatch({
-      type: SET_ORDERS,
-      orders: loadedOrders,
-    });
+      dispatch({
+        type: SET_ORDERS,
+        orders: loadedOrders,
+      });
+    }
   } catch (err) {
     throw err;
   }

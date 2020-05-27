@@ -6,7 +6,7 @@ import {
 } from 'react-navigation-drawer';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { useDispatch } from 'react-redux';
-import { Platform, SafeAreaView, Button, View } from 'react-native';
+import { Platform, SafeAreaView, Button, View, Image } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
@@ -17,9 +17,11 @@ import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
+import UserInformationScreen from '../screens/user/UserInformationScreen';
 
 import * as authActions from '../store/actions/auth';
 import Colors from '../constants/Colors';
+import EditUserInfoScreen from '../screens/user/EditUserInfoScreen';
 
 const defaultNavOption = {
   headerStyle: {
@@ -94,11 +96,31 @@ const AdminNavigator = createStackNavigator(
   }
 );
 
+const UserInformationNavigator = createStackNavigator(
+  {
+    User: UserInformationScreen,
+    EditUserInfo: EditUserInfoScreen,
+  },
+  {
+    navigationOptions: {
+      drawerIcon: (drawerConfig) => (
+        <FontAwesome5 name="user-alt" size={21} color={drawerConfig.tintColor} />
+
+        // <View style={{ height: 100, top: 0, right: 0, alignItems: 'center', justifyContent: 'center' }}>
+        //   <Image source={require('../assets/alex.jpeg')} style={{ width: 100, height: 100 }} resizeMode="center" />
+        // </View>
+      ),
+    },
+    defaultNavigationOptions: defaultNavOption,
+  }
+);
+
 const ShopNavigator = createDrawerNavigator(
   {
     Products: ProductsNavigator,
     Orders: OrdersNavigator,
     Admin: AdminNavigator,
+    UserInfo: UserInformationNavigator,
   },
   {
     contentOptions: {

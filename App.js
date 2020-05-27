@@ -10,6 +10,7 @@ import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import orderReducer from './store/reducers/orders';
 import authReducer from './store/reducers/auth';
+import userReducer from './store/reducers/user';
 
 import NavigationContainer from './navigation/NavigationContainer';
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   orders: orderReducer,
   auth: authReducer,
+  user: userReducer,
 });
 
 // Should remove compose when devploy app to production

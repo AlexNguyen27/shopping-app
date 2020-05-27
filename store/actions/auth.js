@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native';
+import { createUser, ADD_USER_INFO } from './user';
 
 // export const SIGNUP = 'SIGNUP';
 // export const LOGIN = 'LOGIN';
@@ -70,6 +71,14 @@ export const signup = (email, password) => async (dispatch) => {
   const expirationDate = new Date(
     new Date().getTime() + Number(expiresIn) * 1000
   );
+
+  // save user
+  const userData = {
+    userId: localId,
+    email
+  };
+
+  dispatch(createUser(userData));
   saveDataToStorage(idToken, localId, expirationDate);
 };
 

@@ -134,6 +134,7 @@ const AuthScreen = (props) => {
               errorText="Please enter a valid email address!"
               onInputChange={inputChangeHandler}
               initialValue=""
+              returnKeyType="next"
             />
             <Input
               id="password"
@@ -146,6 +147,7 @@ const AuthScreen = (props) => {
               errorText="Please enter a valid password!"
               onInputChange={inputChangeHandler}
               initialValue=""
+              returnKeyType="next"
             />
             <View style={styles.btnContainer}>
               {isLoading ? (
