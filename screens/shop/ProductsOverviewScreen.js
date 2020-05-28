@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
   Text,
+  YellowBox
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -41,27 +42,32 @@ const ProductsOverviewScreen = (props) => {
     setIsRefreshing(false);
   }, [dispatch, setError, setIsLoading]);
 
+  // loading product when scrolling down
   useEffect(() => {
     const willFocusSub = props.navigation.addListener(
       'willFocus',
-      loadProducts
+      loadProducts,
     );
     return () => {
       willFocusSub.remove();
     };
   }, [loadProducts]);
 
-  useEffect(() => {
-    // error right here
+  const setTotalCartItem = useCallback(async () => {
     const totalQuantity = Object.keys(cartObj).reduce(
       (sum, key) => sum + parseFloat(cartObj[key].quantity || 0),
       0
     );
 
     props.navigation.setParams({ totalQuantity });
+  });
+
+  useEffect(() => {
+    setTotalCartItem();
   }, [cartObj]);
 
   useEffect(() => {
+    YellowBox.ignoreWarnings(['Setting a timer']);
     setIsLoading(true);
     loadProducts().then(() => {
       setIsLoading(false);
@@ -115,16 +121,14 @@ const ProductsOverviewScreen = (props) => {
           title={itemData.item.title}
           price={itemData.item.price}
           onSelect={() =>
-            selectItemHandler(itemData.item.id, itemData.item.title)
-          }
+            selectItemHandler(itemData.item.id, itemData.item.title)}
         >
           <MaterialCommunityIcons
             name="eye"
             size={30}
             color={Colors.view}
             onPress={() =>
-              selectItemHandler(itemData.item.id, itemData.item.title)
-            }
+              selectItemHandler(itemData.item.id, itemData.item.title)}
           />
           <Star />
           <MaterialCommunityIcons

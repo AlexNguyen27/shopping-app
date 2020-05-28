@@ -10,12 +10,19 @@ const UserInformationScreen = () => {
 
   const { firstName, lastName, email, phone, address, profileUrl, description } = userInfo;
 
+  if (!profileUrl) {
+    return (
+      <View>
+        <Text>There is no user info</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ alignSelf: 'center', paddingTop: 16 }}>
           <View style={styles.profileImage}>
-            <Image source={profileUrl.trim() !== '' ? {uri: profileUrl} : require('../../assets/alex.jpeg')} style={styles.image} resizeMode="center" />
+            <Image source={profileUrl.trim() !== '' ? { uri: profileUrl } : require('../../assets/alex.jpeg')} style={styles.image} resizeMode="center" />
           </View>
           <View style={styles.dm}>
             <MaterialIcons name="chat" size={18} color="#DFD8C8" />

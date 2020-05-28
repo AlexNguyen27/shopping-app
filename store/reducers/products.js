@@ -6,6 +6,7 @@ import {
   SET_PRODUCTS,
 } from '../actions/products';
 import Product from '../../models/product';
+import { LOGOUT } from '../actions/auth';
 
 const initialState = {
   availableProducts: [],
@@ -75,6 +76,8 @@ export default (state = initialState, action) => {
           (product) => product.id !== action.pid
         ),
       };
+    case LOGOUT:
+      return initialState;
   }
   return state;
 };

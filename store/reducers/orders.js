@@ -1,5 +1,6 @@
 import { ADD_ORDER, SET_ORDERS } from '../actions/orders';
 import Order from '../../models/order';
+import { LOGOUT } from '../actions/auth';
 
 const initialState = {
   orders: [],
@@ -23,6 +24,8 @@ export default (state = initialState, action) => {
         ...state,
         orders: state.orders.concat(newOrder),
       };
+    case LOGOUT:
+      return initialState;
   }
   return state;
 };

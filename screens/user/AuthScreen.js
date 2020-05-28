@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
-import { FontAwesome } from '@expo/vector-icons';
-
 
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
@@ -88,9 +86,9 @@ const AuthScreen = (props) => {
 
   const authHandler = async () => {
     let action;
-    const { email, password } = formState.inputValues;
-    // const email = 'thanh@gmail.com';
-    // const password = '123456';
+    // const { email, password } = formState.inputValues;
+    const email = 'test@gmail.com';
+    const password = '123456';
     if (isSignup) {
       action = authActions.signup(email, password);
     } else {

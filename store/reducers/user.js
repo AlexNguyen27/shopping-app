@@ -4,6 +4,7 @@ import {
   GET_USER_INFO
 } from '../actions/user';
 import User from '../../models/user';
+import { LOGOUT } from '../actions/auth';
 
 const initialState = {
   user: {},
@@ -36,6 +37,8 @@ export default (state = initialState, action) => {
           description
         }
       };
+    case LOGOUT:
+      return initialState;
   }
   return state;
 };

@@ -3,6 +3,7 @@ import { ADD_ORDER } from '../actions/orders';
 
 import CartItem from '../../models/cart-item';
 import { DELETE_PRODUCT } from '../actions/products';
+import { LOGOUT } from '../actions/auth';
 
 const initialState = {
   items: {},
@@ -77,6 +78,8 @@ export default (state = initialState, action) => {
         items: updatedItems,
         itemTotal: state.items.totalAmount - itemTotal,
       };
+    case LOGOUT:
+      return initialState;
   }
   return state;
 };

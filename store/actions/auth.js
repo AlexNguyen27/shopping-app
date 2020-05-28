@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { createUser, ADD_USER_INFO, fetchUser } from './user';
+import { createUser, fetchUser } from './user';
 
 // export const SIGNUP = 'SIGNUP';
 // export const LOGIN = 'LOGIN';
@@ -33,7 +33,7 @@ const clearLogoutTimer = () => {
 const setLogoutTimer = (expirationTime) => async (dispatch) => {
   timer = setTimeout(() => {
     dispatch(logout());
-  }, expirationTime);
+  }, expirationTime); // set time out
 };
 
 export const signup = (email, password) => async (dispatch) => {

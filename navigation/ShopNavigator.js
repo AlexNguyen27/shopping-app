@@ -6,18 +6,19 @@ import {
 } from 'react-navigation-drawer';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { useDispatch } from 'react-redux';
-import { Platform, SafeAreaView, Button, View, Image } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Platform, SafeAreaView, Button, View, Image, Alert } from 'react-native';
+import { Ionicons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
+import SearchProductScreen from '../screens/shop/SearchProductScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
+import UserInformationScreen from '../screens/user/UserInformationScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
-import UserInformationScreen from '../screens/user/UserInformationScreen';
 
 import * as authActions from '../store/actions/auth';
 import Colors from '../constants/Colors';
@@ -115,9 +116,25 @@ const UserInformationNavigator = createStackNavigator(
   }
 );
 
+
+const SearchProductNavigator = createStackNavigator(
+  {
+    Search: SearchProductScreen,
+  },
+  {
+    navigationOptions: {
+      drawerIcon: (drawerConfig) => (
+        <MaterialIcons name="search" size={30} color={drawerConfig.tintColor} />
+      ),
+    },
+    defaultNavigationOptions: defaultNavOption,
+  }
+);
+
 const ShopNavigator = createDrawerNavigator(
   {
     Products: ProductsNavigator,
+    Search: SearchProductNavigator,
     Orders: OrdersNavigator,
     Admin: AdminNavigator,
     UserInfo: UserInformationNavigator,
@@ -137,8 +154,16 @@ const ShopNavigator = createDrawerNavigator(
                 title="Logout"
                 color={Colors.primary}
                 onPress={() => {
-                  dispatch(authActions.logout());
-                  // props.navigation.navigate('Auth');
+                  Alert.alert('Are you sure?', 'Are you sure you want to logout?', [
+                    { text: 'No', style: 'default' },
+                    {
+                      text: 'Yes',
+                      style: 'destructive',
+                      onPress: () => {
+                        dispatch(authActions.logout());
+                      },
+                    },
+                  ]);
                 }}
               />
             </View>
