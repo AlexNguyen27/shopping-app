@@ -5,6 +5,8 @@ import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 // import { composeWithDevTools } from 'redux-devtools-extension';
 import ReduxThunk from 'redux-thunk';
+import * as firebase from 'firebase';
+import ApiKeys from './constants/ApiKeys';
 
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
@@ -30,6 +32,8 @@ const fetchFonts = () =>
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
   });
+
+firebase.initializeApp(ApiKeys.FirebaseConfig);
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);

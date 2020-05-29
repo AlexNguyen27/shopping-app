@@ -48,7 +48,7 @@ const SearchProductScreen = (props) => {
       setIsLoading(false);
       setDataBackup(products);
     });
-  }, [dispatch, loadProducts]);
+  }, [dispatch, setDataBackup, loadProducts]);
 
   const setSearchText = (search) => {
     setSearchKey(search);

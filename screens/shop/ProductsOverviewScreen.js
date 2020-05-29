@@ -22,6 +22,7 @@ import * as productsAction from '../../store/actions/products';
 
 import Colors from '../../constants/Colors';
 import Star from '../../components/UI/Star';
+import StatusBar from '../../components/UI/StatusBar';
 
 const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +84,7 @@ const ProductsOverviewScreen = (props) => {
   if (error) {
     return (
       <View style={styles.centered}>
-        <Text>An error occured!</Text>
+        <Text>An error occurred!</Text>
         <Button
           title="Try again"
           color={Colors.primary}
@@ -165,19 +166,33 @@ ProductsOverviewScreen.navigationOptions = (navData) => ({
     }
 
     return (
-      <View style={{ paddingTop: 15 }}>
-        <View style={styles.total}>
-          <Text style={styles.amount}>{total || 0}</Text>
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <StatusBar />
+        <View style={{ marginTop: 15 }}>
+          <HeaderButtons HeaderButtonComponent={HeaderButton}>
+            <Item
+              title="Cart"
+              iconName={Platform.OS === 'android' ? 'md-search' : 'md-search'}
+              onPress={() => {
+                navData.navigation.navigate('Search');
+              }}
+            />
+          </HeaderButtons>
         </View>
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="Cart"
-            iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-            onPress={() => {
-              navData.navigation.navigate('Cart');
-            }}
-          />
-        </HeaderButtons>
+        <View style={{ paddingTop: 17 }}>
+          <View style={styles.total}>
+            <Text style={styles.amount}>{total || 0}</Text>
+          </View>
+          <HeaderButtons HeaderButtonComponent={HeaderButton}>
+            <Item
+              title="Cart"
+              iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+              onPress={() => {
+                navData.navigation.navigate('Cart');
+              }}
+            />
+          </HeaderButtons>
+        </View>
       </View>
     );
   },
@@ -201,7 +216,7 @@ const styles = StyleSheet.create({
     zIndex: 2000,
   },
   amount: {
-    color: 'black',
+    color: Colors.primary,
     fontFamily: 'open-sans-bold'
   },
 });

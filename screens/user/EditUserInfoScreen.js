@@ -5,11 +5,14 @@ import {
   ScrollView,
   Platform,
   Alert,
+  Button,
   KeyboardAvoidingView,
   ActivityIndicator,
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
+import * as ImagePicker from 'expo-image-picker';
+import * as firebase from 'firebase';
 
 import Input from '../../components/UI/Input';
 import HeaderButton from '../../components/UI/HeaderButton';
@@ -61,7 +64,7 @@ const EditUserInfoScreen = (props) => {
       phone: userInfo ? userInfo.phone : '',
       address: userInfo ? userInfo.address : '',
       profileUrl: userInfo ? userInfo.profileUrl : '',
-      description: userInfo ? userInfo.description : ''
+      description: userInfo ? userInfo.description : '',
     },
     inputValidities: {
       firstName: !!userInfo,
@@ -69,7 +72,7 @@ const EditUserInfoScreen = (props) => {
       phone: !!userInfo,
       address: !!userInfo,
       profileUrl: !!userInfo,
-      description: !!userInfo
+      description: !!userInfo,
     },
     formIsValid: !!userInfo,
   });
@@ -80,8 +83,10 @@ const EditUserInfoScreen = (props) => {
     }
   }, [error]);
 
+
   const submitHandler = useCallback(async () => {
-    if (!formState.formIsValid) {
+    const checkFieldIsEmpty = Object.keys(formState.inputValues).map((key) => formState.inputValues[key] !== '').every((field) => field === false);
+    if (!formState.formIsValid || checkFieldIsEmpty) {
       Alert.alert('Wrong Input!', 'Please check input of the form!', [
         { text: 'OK' },
       ]);
@@ -91,10 +96,7 @@ const EditUserInfoScreen = (props) => {
     setError(null);
     setIsLoading(true);
     try {
-      // console.log(formState.inputValues);
-      await dispatch(
-        userActions.updateUser(formState.inputValues)
-      );
+      await dispatch(userActions.updateUser(formState.inputValues));
       props.navigation.goBack();
     } catch (err) {
       setError(err);
@@ -118,6 +120,60 @@ const EditUserInfoScreen = (props) => {
     },
     [dispatchFormState]
   );
+
+  const getImageUrl = async (imageName) => {
+    try {
+      const ref = firebase.storage().ref(`images/${imageName}`);
+      const url = await ref.getDownloadURL();
+
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: url,
+        isValid: true,
+        input: 'profileUrl',
+      });
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  const onChooseImagePress = async () => {
+    // const result = await ImagePicker.launchCameraAsync();
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      const { uri } = result;
+      const imageName = uri.split('/').pop();
+
+      setIsLoading(true);
+      uploadImage(uri, imageName)
+        .then(async () => {
+          Alert.alert('Success', 'Image uploaded successfully', [
+            { text: 'OK' },
+          ]);
+
+          getImageUrl(imageName);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          Alert.alert('An error occurred', err.message, [
+            { text: 'OK' }
+          ]);
+        });
+    }
+  };
+
+  const uploadImage = async (uri, imageName) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+
+      const ref = firebase.storage().ref().child(`images/${imageName}`);
+      return ref.put(blob);
+    } catch (err) {
+      throw err;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -171,7 +227,9 @@ const EditUserInfoScreen = (props) => {
             keyboardType="default"
             returnKeyType="next"
             required
+            editable={false}
           />
+          <Button title="Choose image..." onPress={onChooseImagePress} />
           <Input
             id="phone"
             label="Phone"
@@ -242,7 +300,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
+  }
 });
 
 export default EditUserInfoScreen;

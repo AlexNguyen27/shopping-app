@@ -7,16 +7,13 @@ import {
   Alert,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Button
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
-import * as ImagePicker from 'expo-image-picker';
-import * as firebase from 'firebase';
 
 import Input from '../../components/UI/Input';
 import HeaderButton from '../../components/UI/HeaderButton';
-import * as productsActions from '../../store/actions/products';
+import * as userActions from '../../store/actions/user';
 import Colors from '../../constants/Colors';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -48,30 +45,33 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const EditProductScreen = (props) => {
+const EditUserInfoScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
-  const prodId = props.navigation.getParam('productId');
-  const editedProduct = useSelector((state) =>
-    state.products.userProducts.find((prod) => prod.id === prodId));
+  const userId = props.navigation.getParam('userId');
+  const userInfo = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
-      title: editedProduct ? editedProduct.title : '',
-      imageUrl: editedProduct ? editedProduct.imageUrl : '',
-      description: editedProduct ? editedProduct.description : '',
-      price: '',
+      firstName: userInfo ? userInfo.firstName : '',
+      lastName: userInfo ? userInfo.lastName : '',
+      phone: userInfo ? userInfo.phone : '',
+      address: userInfo ? userInfo.address : '',
+      profileUrl: userInfo ? userInfo.profileUrl : '',
+      description: userInfo ? userInfo.description : ''
     },
     inputValidities: {
-      title: !!editedProduct,
-      imageUrl: !!editedProduct,
-      description: !!editedProduct,
-      price: !!editedProduct,
+      firstName: !!userInfo,
+      lastName: !!userInfo,
+      phone: !!userInfo,
+      address: !!userInfo,
+      profileUrl: !!userInfo,
+      description: !!userInfo
     },
-    formIsValid: !!editedProduct,
+    formIsValid: !!userInfo,
   });
 
   useEffect(() => {
@@ -90,24 +90,18 @@ const EditProductScreen = (props) => {
 
     setError(null);
     setIsLoading(true);
-    const { title, description, imageUrl, price } = formState.inputValues;
     try {
-      if (editedProduct) {
-        await dispatch(
-          productsActions.updateProduct(prodId, title, description, imageUrl)
-        );
-      } else {
-        await dispatch(
-          productsActions.createProduct(title, description, imageUrl, +price)
-        );
-      }
+      // console.log(formState.inputValues);
+      await dispatch(
+        userActions.updateUser(formState.inputValues)
+      );
       props.navigation.goBack();
     } catch (err) {
       setError(err);
     }
 
     setIsLoading(false);
-  }, [prodId, formState, dispatch]);
+  }, [userId, formState, dispatch]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
@@ -125,58 +119,6 @@ const EditProductScreen = (props) => {
     [dispatchFormState]
   );
 
-  const onChooseImagePress = async () => {
-    // const result = await ImagePicker.launchCameraAsync();
-    const result = await ImagePicker.launchImageLibraryAsync();
-
-    if (!result.cancelled) {
-      const { uri } = result;
-      const imageName = uri.split('/').pop();
-
-      setIsLoading(true);
-      uploadImage(uri, imageName)
-        .then(async () => {
-          Alert.alert('Success', 'Image uploaded successfully', [
-            { text: 'OK' },
-          ]);
-
-          getImageUrl(imageName);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          Alert.alert('An error occurred', err.message, [
-            { text: 'OK' }
-          ]);
-        });
-    }
-  };
-
-  const uploadImage = async (uri, imageName) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      const ref = firebase.storage().ref().child(`images/${imageName}`);
-      return ref.put(blob);
-    } catch (err) {
-      throw err;
-    }
-  };
-  const getImageUrl = async (imageName) => {
-    try {
-      const ref = firebase.storage().ref(`images/${imageName}`);
-      const url = await ref.getDownloadURL();
-
-      dispatchFormState({
-        type: FORM_INPUT_UPDATE,
-        value: url,
-        isValid: true,
-        input: 'imageUrl',
-      });
-    } catch (err) {
-      setError(err);
-    }
-  };
   if (isLoading) {
     return (
       <View style={styles.centered}>
@@ -194,12 +136,12 @@ const EditProductScreen = (props) => {
       <ScrollView>
         <View style={styles.form}>
           <Input
-            id="title"
-            label="Title"
-            initialValue={editedProduct ? editedProduct.title : ''}
-            initialValid={!!editedProduct}
+            id="firstName"
+            label="First name"
+            initialValue={userInfo ? userInfo.firstName : ''}
+            initialValid={!!userInfo}
             onInputChange={inputChangeHandler}
-            errorText="Please enter a valid title!"
+            errorText="Please enter a valid name!"
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
@@ -207,35 +149,57 @@ const EditProductScreen = (props) => {
             required
           />
           <Input
-            id="imageUrl"
-            label="ImageURL"
-            initialValue={editedProduct ? editedProduct.imageUrl : ''}
-            initialValid={!!editedProduct}
+            id="lastName"
+            label="Last name"
+            initialValue={userInfo ? userInfo.lastName : ''}
+            initialValid={!!userInfo}
             onInputChange={inputChangeHandler}
-            errorText="Please enter a valid imageUrl!"
+            errorText="Please enter a valid name!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
+            required
+          />
+          <Input
+            id="profileUrl"
+            label="Profile Url"
+            initialValue={userInfo ? userInfo.profileUrl : ''}
+            initialValid={!!userInfo}
+            onInputChange={inputChangeHandler}
+            errorText="Please enter a valid profileUrl!"
             keyboardType="default"
             returnKeyType="next"
             required
           />
-          <Button title="Choose image..." onPress={onChooseImagePress} />
-          {editedProduct ? null : (
-            <Input
-              id="price"
-              label="Price"
-              initialValue={editedProduct ? editedProduct.price : ''}
-              initialValid={!!editedProduct}
-              onInputChange={inputChangeHandler}
-              errorText="Please enter a valid price!"
-              keyboardType="decimal-pad"
-              returnKeyType="next"
-              min={0.1}
-            />
-          )}
+          <Input
+            id="phone"
+            label="Phone"
+            initialValue={userInfo ? userInfo.phone : ''}
+            initialValid={!!userInfo}
+            onInputChange={inputChangeHandler}
+            errorText="Please enter a valid phone!"
+            keyboardType="decimal-pad"
+            returnKeyType="next"
+            min={0.1}
+          />
+          <Input
+            id="address"
+            label="Address"
+            initialValue={userInfo ? userInfo.address : ''}
+            initialValid={!!userInfo}
+            onInputChange={inputChangeHandler}
+            errorText="Please enter a valid address!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            returnKeyType="next"
+            required
+          />
           <Input
             id="description"
             label="Description"
-            initialValue={editedProduct ? editedProduct.description : ''}
-            initialValid={!!editedProduct}
+            initialValue={userInfo ? userInfo.description : ''}
+            initialValid={!!userInfo}
             onInputChange={inputChangeHandler}
             errorText="Please enter a valid description!"
             keyboardType="default"
@@ -252,12 +216,10 @@ const EditProductScreen = (props) => {
   );
 };
 
-EditProductScreen.navigationOptions = (navData) => {
+EditUserInfoScreen.navigationOptions = (navData) => {
   const submitFn = navData.navigation.getParam('submit');
   return {
-    headerTitle: navData.navigation.getParam('productId')
-      ? 'Edit Product'
-      : 'Add Product',
+    headerTitle: 'Edit Your Info',
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
@@ -283,4 +245,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditProductScreen;
+export default EditUserInfoScreen;
