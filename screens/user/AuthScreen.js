@@ -8,13 +8,16 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
+  Image,
   Text,
+  Animated
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
 
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
+import StatusBar from '../../components/UI/StatusBar';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 
@@ -53,6 +56,8 @@ const AuthScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState();
+  const imageAnimated = new Animated.Value(-500);
+  const authInputAnimated = new Animated.Value(-1000);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -66,6 +71,21 @@ const AuthScreen = (props) => {
     formIsValid: false,
   });
 
+  useEffect(() => {
+    Animated.timing(imageAnimated,
+      {
+        toValue: 0, // from value 0 to 100
+        friction: 10,
+        duration: 1000 // time running
+      }).start();
+
+    Animated.timing(authInputAnimated,
+      {
+        toValue: 0, // from value 0 to 100
+        friction: 10,
+        duration: 1000 // time running
+      }).start();
+  }, []);
   useEffect(() => {
     if (error) {
       Alert.alert('An error occurred!', error, [{ text: 'Okay' }]);
@@ -86,8 +106,8 @@ const AuthScreen = (props) => {
 
   const authHandler = async () => {
     let action;
-    // const { email, password } = formState.inputValues;
-    const email = 'thanh@gmail.com';
+    const { email } = formState.inputValues;
+    // const email = 'nam@gmail.com';
     const password = '123456';
     if (isSignup) {
       action = authActions.signup(email, password);
@@ -111,74 +131,68 @@ const AuthScreen = (props) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.screen}
     >
-      <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcome}>
-            {isSignup ? 'Create your account :)' : 'Welcome back :)'}
-          </Text>
-          <Text style={styles.continue}>
-            {isSignup ? 'Signup to continue' : 'Login to continue'}
-          </Text>
-        </View>
-        <Card style={styles.authContainer}>
-          <ScrollView>
-            <Input
-              id="email"
-              label="E-mail"
-              keyboardType="email-address"
-              required
-              email
-              autoCapitalize="none"
-              errorText="Please enter a valid email address!"
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              returnKeyType="next"
-            />
-            <Input
-              id="password"
-              label="Password"
-              keyboardType="default"
-              secureTextEntry
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid password!"
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              returnKeyType="next"
-            />
-            <View style={styles.btnContainer}>
-              {isLoading ? (
-                <ActivityIndicator size="large" color={Colors.primary} />
-              ) : (
-                <Button
-                  title={isSignup ? 'Sign Up' : 'Login'}
-                  color={Colors.primary}
-                  onPress={authHandler}
-                />
-              )}
-            </View>
-            <View style={styles.btnContainer}>
-              <Button
-                title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`}
-                color={Colors.accent}
-                onPress={() => setIsSignup((prevState) => !prevState)}
+      <StatusBar />
+
+      <LinearGradient colors={[Colors.linear1, Colors.linear2, Colors.linear3, Colors.linear4]} style={styles.gradient}>
+        <Animated.View style={{ marginTop: imageAnimated }}>
+          <Image source={require('../../assets/logotrans.png')} style={styles.image} resizeMode="center" />
+        </Animated.View>
+        <Animated.View style={[styles.authContainer, { left: authInputAnimated }]}>
+          <Card style={{ padding: 20, width: 280}}>
+            <ScrollView>
+              <Input
+                id="email"
+                label="E-mail"
+                keyboardType="email-address"
+                required
+                email
+                autoCapitalize="none"
+                errorText="Please enter a valid email address!"
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                returnKeyType="next"
               />
-            </View>
-            {/* <View style={styles.btnContainer}>
-              <FontAwesome.Button name="facebook" backgroundColor="#3b5998" onPress={() => {}}>
-                Sign in with Facebook
-              </FontAwesome.Button>
-            </View> */}
-          </ScrollView>
-        </Card>
+              <Input
+                id="password"
+                label="Password"
+                keyboardType="default"
+                secureTextEntry
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid password!"
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                returnKeyType="next"
+              />
+              <View style={styles.btnContainer}>
+                {isLoading ? (
+                  <ActivityIndicator size="large" color={Colors.primary} />
+                ) : (
+                  <Button
+                    title={isSignup ? 'Sign Up' : 'Login'}
+                    color={Colors.primary}
+                    onPress={authHandler}
+                  />
+                )}
+              </View>
+              <View style={styles.btnContainer}>
+                <Button
+                  title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`}
+                  color={Colors.accent}
+                  onPress={() => setIsSignup((prevState) => !prevState)}
+                />
+              </View>
+            </ScrollView>
+          </Card>
+        </Animated.View>
       </LinearGradient>
     </KeyboardAvoidingView>
   );
 };
 
 AuthScreen.navigationOptions = {
-  headerTitle: '☘ MeShop ☘',
+  headerShown: false
 };
 
 const styles = StyleSheet.create({
@@ -191,13 +205,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   authContainer: {
-    width: '70%',
     maxWidth: 400,
     maxHeight: 400,
     padding: 20,
   },
   btnContainer: {
-    marginTop: 15,
+    marginTop: 13,
   },
   welcomeContainer: {
     marginVertical: 10,
@@ -211,6 +224,10 @@ const styles = StyleSheet.create({
     fontFamily: 'open-sans',
     fontSize: 15,
   },
+  image: {
+    width: 400,
+    height: 250,
+  }
 });
 
 export default AuthScreen;

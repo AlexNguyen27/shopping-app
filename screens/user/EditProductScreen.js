@@ -215,9 +215,10 @@ const EditProductScreen = (props) => {
             errorText="Please enter a valid imageUrl!"
             keyboardType="default"
             returnKeyType="next"
-            required
+            // required
+            editable={false}
           />
-          <Button title="Choose image..." onPress={onChooseImagePress} />
+          <Button color={Colors.primary} title="Choose image..." onPress={onChooseImagePress} />
           {editedProduct ? null : (
             <Input
               id="price"

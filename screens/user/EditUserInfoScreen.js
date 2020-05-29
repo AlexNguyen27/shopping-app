@@ -229,7 +229,7 @@ const EditUserInfoScreen = (props) => {
             required
             editable={false}
           />
-          <Button title="Choose image..." onPress={onChooseImagePress} />
+          <Button color={Colors.primary} title="Choose image..." onPress={onChooseImagePress} />
           <Input
             id="phone"
             label="Phone"

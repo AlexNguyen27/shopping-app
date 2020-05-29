@@ -105,7 +105,7 @@ const ProductsOverviewScreen = (props) => {
   if (!isLoading && products.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No products found. Maybe start adding some!</Text>
+        <Text style={styles.notfound}>No products found. Maybe start adding some!</Text>
       </View>
     );
   }
@@ -180,9 +180,13 @@ ProductsOverviewScreen.navigationOptions = (navData) => ({
           </HeaderButtons>
         </View>
         <View style={{ paddingTop: 17 }}>
-          <View style={styles.total}>
-            <Text style={styles.amount}>{total || 0}</Text>
-          </View>
+          {
+            total === 0 ? null : (
+              <View style={styles.total}>
+                <Text style={styles.amount}>{total || 0}</Text>
+              </View>
+            )
+          }
           <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item
               title="Cart"
@@ -209,16 +213,21 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 25,
     width: 25,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.light_blue,
     right: 32,
+    top: 3,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2000,
   },
   amount: {
-    color: Colors.primary,
+    color: Colors.dark_gray,
     fontFamily: 'open-sans-bold'
   },
+  notfound: {
+    fontFamily: 'open-sans',
+    fontSize: 16
+  }
 });
 
 export default ProductsOverviewScreen;

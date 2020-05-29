@@ -47,7 +47,7 @@ const OrdersScreen = (props) => {
   if (orders.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No orders found. Maybe start ordering some products!</Text>
+        <Text style={styles.notfound}>No orders found. Maybe start ordering some products!</Text>
       </View>
     );
   }
@@ -89,6 +89,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  notfound: {
+    fontFamily: 'open-sans',
+    fontSize: 16,
+    paddingHorizontal: 20
+  }
 });
 
 export default OrdersScreen;

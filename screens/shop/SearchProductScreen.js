@@ -77,8 +77,11 @@ const SearchProductScreen = (props) => {
   return (
     <View>
       <SearchBar
+        round
         lightTheme
         onChangeText={(search) => setSearchText(search)}
+        inputStyle={{ color: 'black' }}
+        placeholderTextColor="white"
         placeholder="Type product name and price here..."
         value={searchKey}
       />
@@ -116,7 +119,7 @@ const SearchProductScreen = (props) => {
           />
         ) : (
           <View style={styles.centered}>
-            <Text>No product found!</Text>
+            <Text style={styles.notfound}>No products found!</Text>
           </View>
         )
       }
@@ -162,6 +165,10 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'open-sans-bold'
   },
+  notfound: {
+    fontFamily: 'open-sans',
+    fontSize: 16
+  }
 });
 
 export default SearchProductScreen;

@@ -45,7 +45,7 @@ const UserProductsScreen = (props) => {
   if (userProducts.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No products found. Maybe start adding some!</Text>
+        <Text style={styles.notfound}>No products found. Maybe start adding some!</Text>
       </View>
     );
   }
@@ -90,6 +90,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  notfound: {
+    fontFamily: 'open-sans',
+    fontSize: 16,
+    paddingHorizontal: 20
   }
 });
 

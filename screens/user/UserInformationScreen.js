@@ -4,6 +4,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
+import Colors from '../../constants/Colors';
 
 const UserInformationScreen = (props) => {
   const userInfo = useSelector((state) => state.user.user);
@@ -144,6 +145,9 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
+    borderColor: Colors.dark_gray,
+    borderWidth: 3,
+    backgroundColor: 'transparent',
     overflow: 'hidden'
   },
   dm: {
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
   active: {
     backgroundColor: '#34FFB9',
     position: 'absolute',
-    bottom: 28,
+    bottom: 34,
     left: 10,
     padding: 4,
     height: 20,
