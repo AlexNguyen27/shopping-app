@@ -115,14 +115,7 @@ export const login = (email, password) => async (dispatch) => {
     new Date().getTime() + Number(resData.expiresIn) * 1000
   );
 
-  // save user
-  // const userData = {
-  //   userId: localId,
-  //   email
-  // };
-
   dispatch(fetchUser());
-  // dispatch(createUser(userData));
   saveDataToStorage(idToken, localId, expirationDate);
 };
 

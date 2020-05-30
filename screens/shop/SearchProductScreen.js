@@ -88,35 +88,37 @@ const SearchProductScreen = (props) => {
 
       {
         data && data.length > 0 ? (
-          <FlatList
-            data={data && data.length > 0 ? data : dataBackup}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <ProductItem
-                imageUrl={item.imageUrl}
-                title={item.title}
-                price={item.price}
-                onSelect={() =>
-                  selectItemHandler(item.id, item.title)}
-              >
-                <MaterialCommunityIcons
-                  name="eye"
-                  size={30}
-                  color={Colors.view}
-                  onPress={() =>
+          <View style={styles.container}>
+            <FlatList
+              data={data && data.length > 0 ? data : dataBackup}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <ProductItem
+                  imageUrl={item.imageUrl}
+                  title={item.title}
+                  price={item.price}
+                  onSelect={() =>
                     selectItemHandler(item.id, item.title)}
-                />
-                <Star />
-                <MaterialCommunityIcons
-                  name="cart"
-                  size={25}
-                  color={Colors.primary}
-                  title="To Cart"
-                  onPress={() => dispatch(cardActions.addToCart(item))}
-                />
-              </ProductItem>
-            )}
-          />
+                >
+                  <MaterialCommunityIcons
+                    name="eye"
+                    size={30}
+                    color={Colors.view}
+                    onPress={() =>
+                      selectItemHandler(item.id, item.title)}
+                  />
+                  <Star />
+                  <MaterialCommunityIcons
+                    name="cart"
+                    size={25}
+                    color={Colors.primary}
+                    title="To Cart"
+                    onPress={() => dispatch(cardActions.addToCart(item))}
+                  />
+                </ProductItem>
+              )}
+            />
+          </View>
         ) : (
           <View style={styles.centered}>
             <Text style={styles.notfound}>No products found!</Text>
@@ -168,6 +170,9 @@ const styles = StyleSheet.create({
   notfound: {
     fontFamily: 'open-sans',
     fontSize: 16
+  },
+  container: {
+    marginBottom: 150
   }
 });
 

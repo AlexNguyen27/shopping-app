@@ -106,9 +106,9 @@ const AuthScreen = (props) => {
 
   const authHandler = async () => {
     let action;
-    const { email } = formState.inputValues;
-    // const email = 'nam@gmail.com';
-    const password = '123456';
+    const { email, password } = formState.inputValues;
+    // const email = 'testtest@gmail.com';
+    // const password = '123456';
     if (isSignup) {
       action = authActions.signup(email, password);
     } else {

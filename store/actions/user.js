@@ -1,4 +1,4 @@
-import User from '../../models/user';
+// import User from '../../models/user';
 
 export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
@@ -52,7 +52,7 @@ export const createUser = (userData) => async (dispatch, getState) => {
     throw new Error('Something when wrong!');
   }
 
-  const user = await res.json();
+  // const user = await res.json();
 
   dispatch({
     type: ADD_USER_INFO,

@@ -1,44 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Platform, Text, View, SafeAreaView, Image, ScrollView, Alert, Modal, Button, TouchableHighlight } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
 import Colors from '../../constants/Colors';
+import Card from '../../components/UI/Card';
 
 const UserInformationScreen = (props) => {
   const userInfo = useSelector((state) => state.user.user);
-  const [modalVisible, setModalVisible] = useState(true);
+  // const [modalVisible, setModalVisible] = useState(true);
 
   const { firstName, lastName, email, phone, address, profileUrl, description } = userInfo;
 
   if (!profileUrl) {
     return (
       <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Welcome here!</Text>
-              <Button
-                title="Click to add your information"
-                onPress={() => {
-                  setModalVisible(false);
-                  props.navigation.navigate('EditUserInfo');
-                }}
-              />
-            </View>
+        <Card>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Welcome here!</Text>
+            <Button
+              color={Colors.primary}
+              title="Click to add your information"
+              onPress={() => {
+                props.navigation.navigate('EditUserInfo');
+              }}
+            />
           </View>
-        </Modal>
+        </Card>
       </View>
     );
   }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -251,18 +244,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
   },
   openButton: {
     backgroundColor: '#F194FF',
