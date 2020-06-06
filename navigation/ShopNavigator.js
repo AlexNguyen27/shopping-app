@@ -6,7 +6,7 @@ import {
 } from 'react-navigation-drawer';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { useDispatch } from 'react-redux';
-import { Platform, SafeAreaView, Button, View, Image, Alert } from 'react-native';
+import { Platform, SafeAreaView, Button, View, Alert } from 'react-native';
 import { Ionicons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
@@ -23,6 +23,7 @@ import StartupScreen from '../screens/StartupScreen';
 import * as authActions from '../store/actions/auth';
 import Colors from '../constants/Colors';
 import EditUserInfoScreen from '../screens/user/EditUserInfoScreen';
+import ConfirmOrdersScreen from '../screens/shop/ConfirmOrdersScreen';
 
 const defaultNavOption = {
   headerStyle: {
@@ -44,6 +45,7 @@ const ProductsNavigator = createStackNavigator(
     ProductsOverview: ProductsOverviewScreen,
     ProductDetail: ProductDetailScreen,
     Cart: CartScreen,
+    Confirm: ConfirmOrdersScreen
   },
   {
     navigationOptions: {

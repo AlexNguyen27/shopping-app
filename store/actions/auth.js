@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native';
+import * as firebase from 'firebase';
 import { createUser, fetchUser } from './user';
 
 // export const SIGNUP = 'SIGNUP';
@@ -52,6 +53,14 @@ export const signup = (email, password) => async (dispatch) => {
     }
   );
 
+
+  firebase.auth().createUserWithEmailAndPassword(email, password).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(error);
+  });
+
   if (!response.ok) {
     const errorResData = await response.json();
     const errorMessage = errorResData.error.message;
@@ -93,6 +102,8 @@ export const login = (email, password) => async (dispatch) => {
       body: JSON.stringify({ email, password, returnSecureToken: true }),
     }
   );
+
+  
   if (!res.ok) {
     const errorResData = await res.json();
     const errorMessage = errorResData.error.message;

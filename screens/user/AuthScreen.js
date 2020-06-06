@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   Alert,
   Image,
-  Text,
   Animated
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -107,7 +106,7 @@ const AuthScreen = (props) => {
   const authHandler = async () => {
     let action;
     const { email, password } = formState.inputValues;
-    // const email = 'testtest@gmail.com';
+    // const email = 'thanhnguyen.tnn55@gmail.com';
     // const password = '123456';
     if (isSignup) {
       action = authActions.signup(email, password);

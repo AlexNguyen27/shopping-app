@@ -13,6 +13,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+// import * as firebase from 'firebase';
+// import { Notifications } from 'expo';
+// import { Permissions } from 'expo-permissions';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import ProductItem from '../../components/shop/ProductItem';
@@ -75,12 +78,52 @@ const ProductsOverviewScreen = (props) => {
     });
   }, [dispatch, loadProducts]);
 
+  // useEffect(() => {
+  //   const listener = firebase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       registerForPushNotificationsAsync(user);
+  //     }
+  //   });
+  //   console.log('running-----');
+  //   listener();
+  // }, []);
+
   const selectItemHandler = (id, title) => {
     props.navigation.navigate('ProductDetail', {
       productId: id,
       productTitle: title,
     });
   };
+
+  // const registerForPushNotificationsAsync = async (currentUser) => {
+  //   const { existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  //   let finalStatus = existingStatus;
+
+  //   // only ask if permissions have not already been determined, because
+  //   // iOS won't necessarily prompt the user a second time.
+  //   if (existingStatus !== 'granted') {
+  //     // Android remote notification permissions are granted during the app
+  //     // install, so this will only ask on iOS
+  //     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+  //     finalStatus = status;
+  //   }
+
+  //   // Stop here if the user did not grant permissions
+  //   if (finalStatus !== 'granted') {
+  //     return;
+  //   }
+
+  //   // Get the token that uniquely identifies this device
+  //   const token = await Notifications.getExpoPushTokenAsync();
+
+  //   // POST the token to our backend so we can use it to send pushes from there
+  //   const updates = {};
+  //   updates['/expoToken'] = token;
+  //   console.log('herer', updates);
+  //   await firebase.database().ref(`/users/${currentUser.uid}`).update(updates);
+  //   // call the push notification
+  // };
+
   if (error) {
     return (
       <View style={styles.centered}>

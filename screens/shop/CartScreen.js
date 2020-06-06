@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
   View,
   Text,
   Button,
   StyleSheet,
   ActivityIndicator,
+  Alert
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
+import * as firebase from 'firebase';
 
 import Card from '../../components/UI/Card';
 import CartItem from '../../components/shop/CartItem';
 import * as cartActions from '../../store/actions/cart';
 import * as ordersActions from '../../store/actions/orders';
 import Colors from '../../constants/Colors';
+import { sendEmail, sendEmailVarification, confirmEmailVarification } from '../../store/actions/send-emailv2';
 
 // eslint-disable-next-line no-unused-vars
 const CartScreen = (props) => {
@@ -22,6 +25,27 @@ const CartScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
+  const userInfo = useSelector((state) => state.user.user);
+
+  const isOrdered = props.navigation.getParam('isOrdered');
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user.emailVerified) {
+        console.log('user.emailVerified----', user.emailVerified);
+      } else {
+        console.log('errr');
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isOrdered) {
+      Alert.alert('Success', 'Ordered successfully', [
+        { text: 'OK' },
+      ]);
+    }
+  }, [isOrdered]);
 
   const cartItems = useSelector((state) => {
     const transformCartItems = [];
@@ -46,9 +70,13 @@ const CartScreen = (props) => {
   });
 
   const sendOrdersHandler = async () => {
-    setIsLoading(true);
-    await dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
-    setIsLoading(false);
+    props.navigation.navigate('Confirm');
+
+    // setIsLoading(true);
+    // await dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
+    // sending email
+
+    // setIsLoading(false);
   };
 
   return (
